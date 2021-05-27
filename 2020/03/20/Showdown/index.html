@@ -1,170 +1,39 @@
 <!DOCTYPE html>
-<html lang=en>
+<html lang="zh">
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io).  InstallationDownload tar">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Showdown">
-<meta property="og:url" content="http://example.com/2020/03/20/Showdown/index.html">
-<meta property="og:site_name" content="Pirate">
-<meta property="og:description" content="Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io).  InstallationDownload tar">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://i.imgur.com/YQ9iHTL.gif">
-<meta property="article:published_time" content="2020-03-20T01:38:48.000Z">
-<meta property="article:modified_time" content="2021-05-27T03:23:18.086Z">
-<meta property="article:author" content="jijun.suo@gmail.com">
-<meta property="article:tag" content="study">
-<meta property="article:tag" content="tools">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://i.imgur.com/YQ9iHTL.gif">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="google-site-verification" content="TZE0rZyIqLl10trYu3BWBWa1Vmz6HFwhb2OcNEK4u-s" />
+     <link rel="shortcut icon" href= /img/favicon.ico >
+    <title>
+        Pirate
+    </title>
+    <meta name="description" content= A tester want to learn some programming language and system. >
+    <meta name="keywords" content= Blog,Hexo,Test,Coding >
     
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
     
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>Showdown</title>
-    <!-- styles -->
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
     
 <link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
 <meta name="generator" content="Hexo 5.4.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
-        
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="Previous post " href="/2020/03/20/hexo/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="Next post " href="/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">Previous post</span>
-      <span id="i-next" class="info" style="display:none;">Next post</span>
-      <span id="i-top" class="info" style="display:none;">Back to top</span>
-      <span id="i-share" class="info" style="display:none;">Share post</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/03/20/Showdown/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/03/20/Showdown/&text=Showdown"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/03/20/Showdown/&is_video=false&description=Showdown"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Showdown&body=Check out this article: http://example.com/2020/03/20/Showdown/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/03/20/Showdown/&name=Showdown&description=&lt;p&gt;Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io). &lt;/p&gt;
-&lt;h1 id=&#34;Installation&#34;&gt;&lt;a href=&#34;#Installation&#34; class=&#34;headerlink&#34; title=&#34;Installation&#34;&gt;&lt;/a&gt;Installation&lt;/h1&gt;&lt;h2 id=&#34;Download-tarball&#34;&gt;&lt;a href=&#34;#Download-tarball&#34; class=&#34;headerlink&#34; title=&#34;Download tarball&#34;&gt;&lt;/a&gt;Download tarball&lt;/h2&gt;&lt;p&gt;You can download the latest release tarball directly from &lt;a href=&#34;https://github.com/showdownjs/showdown/releases&#34;&gt;releases&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;Bower&#34;&gt;&lt;a href=&#34;#Bower&#34; class=&#34;headerlink&#34; title=&#34;Bower&#34;&gt;&lt;/a&gt;Bower&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;bower install showdown
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;npm-server-side&#34;&gt;&lt;a href=&#34;#npm-server-side&#34; class=&#34;headerlink&#34; title=&#34;npm (server-side)&#34;&gt;&lt;/a&gt;npm (server-side)&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;npm install showdown
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;CDN&#34;&gt;&lt;a href=&#34;#CDN&#34; class=&#34;headerlink&#34; title=&#34;CDN&#34;&gt;&lt;/a&gt;CDN&lt;/h2&gt;&lt;p&gt;You can also use one of several CDNs available: &lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/03/20/Showdown/&t=Showdown"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-home
+ replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Showdown
+        </p>
+        <hr>
     </div>
-    <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Download-tarball"><span class="toc-number">1.1.</span> <span class="toc-text">Download tarball</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bower"><span class="toc-number">1.2.</span> <span class="toc-text">Bower</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#npm-server-side"><span class="toc-number">1.3.</span> <span class="toc-text">npm (server-side)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CDN"><span class="toc-number">1.4.</span> <span class="toc-text">CDN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax"><span class="toc-number">2.</span> <span class="toc-text">Syntax</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Table-of-contents"><span class="toc-number">2.1.</span> <span class="toc-text">Table of contents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">2.2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paragraphs"><span class="toc-number">2.3.</span> <span class="toc-text">Paragraphs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Headings"><span class="toc-number">2.4.</span> <span class="toc-text">Headings</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Atx-Style"><span class="toc-number">2.4.1.</span> <span class="toc-text">Atx Style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setext-style"><span class="toc-number">2.4.2.</span> <span class="toc-text">Setext style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Header-IDs"><span class="toc-number">2.4.3.</span> <span class="toc-text">Header IDs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Blockquotes"><span class="toc-number">2.5.</span> <span class="toc-text">Blockquotes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bold-and-Italic"><span class="toc-number">2.6.</span> <span class="toc-text">Bold and Italic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strikethrough"><span class="toc-number">2.7.</span> <span class="toc-text">Strikethrough</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Emojis"><span class="toc-number">2.8.</span> <span class="toc-text">Emojis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code-formatting"><span class="toc-number">2.9.</span> <span class="toc-text">Code formatting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline-formats"><span class="toc-number">2.9.1.</span> <span class="toc-text">Inline formats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multiple-lines"><span class="toc-number">2.9.2.</span> <span class="toc-text">Multiple lines</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lists"><span class="toc-number">2.10.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unordered-lists"><span class="toc-number">2.10.1.</span> <span class="toc-text">Unordered lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ordered-lists"><span class="toc-number">2.10.2.</span> <span class="toc-text">Ordered lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TaskLists-GFM-Style"><span class="toc-number">2.10.3.</span> <span class="toc-text">TaskLists (GFM Style)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List-syntax"><span class="toc-number">2.10.4.</span> <span class="toc-text">List syntax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-blocks"><span class="toc-number">2.10.5.</span> <span class="toc-text">Nested blocks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-lists"><span class="toc-number">2.10.6.</span> <span class="toc-text">Nested lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-code-blocks"><span class="toc-number">2.10.7.</span> <span class="toc-text">Nested code blocks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Links"><span class="toc-number">2.11.</span> <span class="toc-text">Links</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Simple"><span class="toc-number">2.11.1.</span> <span class="toc-text">Simple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline"><span class="toc-number">2.11.2.</span> <span class="toc-text">Inline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-Style"><span class="toc-number">2.11.3.</span> <span class="toc-text">Reference Style</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Images"><span class="toc-number">2.12.</span> <span class="toc-text">Images</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline-1"><span class="toc-number">2.12.1.</span> <span class="toc-text">Inline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-Style-1"><span class="toc-number">2.12.2.</span> <span class="toc-text">Reference Style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Image-dimensions"><span class="toc-number">2.12.3.</span> <span class="toc-text">Image dimensions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Base64-encoded-images"><span class="toc-number">2.12.4.</span> <span class="toc-text">Base64 encoded images</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tables"><span class="toc-number">2.13.</span> <span class="toc-text">Tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mentions"><span class="toc-number">2.14.</span> <span class="toc-text">Mentions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handling-HTML-in-markdown-documents"><span class="toc-number">2.15.</span> <span class="toc-text">Handling HTML in markdown documents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Escaping-entities"><span class="toc-number">2.16.</span> <span class="toc-text">Escaping entities</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Escaping-markdown-entities"><span class="toc-number">2.16.1.</span> <span class="toc-text">Escaping markdown entities</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Escaping-HTML-tags"><span class="toc-number">2.16.2.</span> <span class="toc-text">Escaping HTML tags</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Known-differences-and-Gotchas"><span class="toc-number">2.17.</span> <span class="toc-text">Known differences and Gotchas</span></a></li></ol></li></ol>
-    </div>
-  </span>
-</div>
-
-    
-    <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle" itemprop="name headline">
-        Showdown
-    </h1>
-
-
-
-    <div class="meta">
-      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">jijun.suo@gmail.com</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2020-03-20T01:38:48.000Z" itemprop="datePublished">2020-03-20</time>
-        
-      
-    </div>
-
-
-      
-    <div class="article-category">
-        <i class="fas fa-archive"></i>
-        <a class="category-link" href="/categories/Tools/">Tools</a>
-    </div>
-
-
-      
-    <div class="article-tag">
-        <i class="fas fa-tag"></i>
-        <a class="tag-link-link" href="/tags/study/" rel="tag">study</a>, <a class="tag-link-link" href="/tags/tools/" rel="tag">tools</a>
-    </div>
-
-
-    </div>
-  </header>
-  
-
-  <div class="content" itemprop="articleBody">
-    <p>Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io). </p>
+    <div class="post-content">
+        <p>Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io). </p>
 <h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><h2 id="Download-tarball"><a href="#Download-tarball" class="headerlink" title="Download tarball"></a>Download tarball</h2><p>You can download the latest release tarball directly from <a target="_blank" rel="noopener" href="https://github.com/showdownjs/showdown/releases">releases</a></p>
 <h2 id="Bower"><a href="#Bower" class="headerlink" title="Bower"></a>Bower</h2><pre><code>bower install showdown
 </code></pre>
@@ -471,147 +340,66 @@
 </ul>
 <p>This new ruleset is based on the comments of Markdown’s author John Gruber in the <a target="_blank" rel="noopener" href="https://pairlist6.pair.net/mailman/listinfo/markdown-discuss">Markdown discussion list</a>.</p>
 
-  </div>
-</article>
-
-
-
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
-
-    <div id="nav-footer" style="display: none">
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
-        
-      </ul>
     </div>
 
-    <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Installation"><span class="toc-number">1.</span> <span class="toc-text">Installation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Download-tarball"><span class="toc-number">1.1.</span> <span class="toc-text">Download tarball</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bower"><span class="toc-number">1.2.</span> <span class="toc-text">Bower</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#npm-server-side"><span class="toc-number">1.3.</span> <span class="toc-text">npm (server-side)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CDN"><span class="toc-number">1.4.</span> <span class="toc-text">CDN</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax"><span class="toc-number">2.</span> <span class="toc-text">Syntax</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Table-of-contents"><span class="toc-number">2.1.</span> <span class="toc-text">Table of contents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">2.2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Paragraphs"><span class="toc-number">2.3.</span> <span class="toc-text">Paragraphs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Headings"><span class="toc-number">2.4.</span> <span class="toc-text">Headings</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Atx-Style"><span class="toc-number">2.4.1.</span> <span class="toc-text">Atx Style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setext-style"><span class="toc-number">2.4.2.</span> <span class="toc-text">Setext style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Header-IDs"><span class="toc-number">2.4.3.</span> <span class="toc-text">Header IDs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Blockquotes"><span class="toc-number">2.5.</span> <span class="toc-text">Blockquotes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bold-and-Italic"><span class="toc-number">2.6.</span> <span class="toc-text">Bold and Italic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Strikethrough"><span class="toc-number">2.7.</span> <span class="toc-text">Strikethrough</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Emojis"><span class="toc-number">2.8.</span> <span class="toc-text">Emojis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code-formatting"><span class="toc-number">2.9.</span> <span class="toc-text">Code formatting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline-formats"><span class="toc-number">2.9.1.</span> <span class="toc-text">Inline formats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multiple-lines"><span class="toc-number">2.9.2.</span> <span class="toc-text">Multiple lines</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lists"><span class="toc-number">2.10.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Unordered-lists"><span class="toc-number">2.10.1.</span> <span class="toc-text">Unordered lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ordered-lists"><span class="toc-number">2.10.2.</span> <span class="toc-text">Ordered lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TaskLists-GFM-Style"><span class="toc-number">2.10.3.</span> <span class="toc-text">TaskLists (GFM Style)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List-syntax"><span class="toc-number">2.10.4.</span> <span class="toc-text">List syntax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-blocks"><span class="toc-number">2.10.5.</span> <span class="toc-text">Nested blocks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-lists"><span class="toc-number">2.10.6.</span> <span class="toc-text">Nested lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nested-code-blocks"><span class="toc-number">2.10.7.</span> <span class="toc-text">Nested code blocks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Links"><span class="toc-number">2.11.</span> <span class="toc-text">Links</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Simple"><span class="toc-number">2.11.1.</span> <span class="toc-text">Simple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline"><span class="toc-number">2.11.2.</span> <span class="toc-text">Inline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-Style"><span class="toc-number">2.11.3.</span> <span class="toc-text">Reference Style</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Images"><span class="toc-number">2.12.</span> <span class="toc-text">Images</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inline-1"><span class="toc-number">2.12.1.</span> <span class="toc-text">Inline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-Style-1"><span class="toc-number">2.12.2.</span> <span class="toc-text">Reference Style</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Image-dimensions"><span class="toc-number">2.12.3.</span> <span class="toc-text">Image dimensions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Base64-encoded-images"><span class="toc-number">2.12.4.</span> <span class="toc-text">Base64 encoded images</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tables"><span class="toc-number">2.13.</span> <span class="toc-text">Tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mentions"><span class="toc-number">2.14.</span> <span class="toc-text">Mentions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handling-HTML-in-markdown-documents"><span class="toc-number">2.15.</span> <span class="toc-text">Handling HTML in markdown documents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Escaping-entities"><span class="toc-number">2.16.</span> <span class="toc-text">Escaping entities</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Escaping-markdown-entities"><span class="toc-number">2.16.1.</span> <span class="toc-text">Escaping markdown entities</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Escaping-HTML-tags"><span class="toc-number">2.16.2.</span> <span class="toc-text">Escaping HTML tags</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Known-differences-and-Gotchas"><span class="toc-number">2.17.</span> <span class="toc-text">Known differences and Gotchas</span></a></li></ol></li></ol>
-    </div>
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p><h4>Copyright © 2020 | Author: Pirate | Theme By <a class="theme-author" target="_blank" rel="noopener" href="https://github.com/Xunzhuo/hexo-theme-coder" style="font-size:14px; color: #969696">Coder</a></h4>
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <span id="busuanzi_container_site_pv">Page Views: <span id="busuanzi_value_site_pv"></span></span>
+        <span class="post-meta-divider">|</span>
+        <span id="busuanzi_container_site_uv">Unique Visitors: <span id="busuanzi_value_site_uv"></span></span>
+    
+    <label class="el-switch el-switch-blue el-switch-sm" style="vertical-align: sub;">
+        <input type="checkbox" name="switch" id="update_style">
+        <span class="el-switch-style"></span>
+    </label>
 
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/03/20/Showdown/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/03/20/Showdown/&text=Showdown"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/03/20/Showdown/&is_video=false&description=Showdown"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Showdown&body=Check out this article: http://example.com/2020/03/20/Showdown/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/03/20/Showdown/&title=Showdown"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/03/20/Showdown/&name=Showdown&description=&lt;p&gt;Showdown is a Javascript Markdown to HTML converter, based on the original works by John Gruber. It can be used client side (in the browser) or server side (with Node or io). &lt;/p&gt;
-&lt;h1 id=&#34;Installation&#34;&gt;&lt;a href=&#34;#Installation&#34; class=&#34;headerlink&#34; title=&#34;Installation&#34;&gt;&lt;/a&gt;Installation&lt;/h1&gt;&lt;h2 id=&#34;Download-tarball&#34;&gt;&lt;a href=&#34;#Download-tarball&#34; class=&#34;headerlink&#34; title=&#34;Download tarball&#34;&gt;&lt;/a&gt;Download tarball&lt;/h2&gt;&lt;p&gt;You can download the latest release tarball directly from &lt;a href=&#34;https://github.com/showdownjs/showdown/releases&#34;&gt;releases&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;Bower&#34;&gt;&lt;a href=&#34;#Bower&#34; class=&#34;headerlink&#34; title=&#34;Bower&#34;&gt;&lt;/a&gt;Bower&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;bower install showdown
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;npm-server-side&#34;&gt;&lt;a href=&#34;#npm-server-side&#34; class=&#34;headerlink&#34; title=&#34;npm (server-side)&#34;&gt;&lt;/a&gt;npm (server-side)&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;npm install showdown
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;CDN&#34;&gt;&lt;a href=&#34;#CDN&#34; class=&#34;headerlink&#34; title=&#34;CDN&#34;&gt;&lt;/a&gt;CDN&lt;/h2&gt;&lt;p&gt;You can also use one of several CDNs available: &lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/03/20/Showdown/&t=Showdown"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
-        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
-    </div>
-
-  </div>
+    <!--         <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script> -->
+</p>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2016-2021
-    jijun.suo@gmail.com
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="NOsswOncKgc8HOxqo9oxIWlX-gzGzoHsz">
+<input type="hidden" id="valine_appKey" value="z1FihjWEbS8uIfUQdmCtK7zz">
 
-    </div>
-    <!-- styles -->
+<script src="/libs/jquery.min.js"></script>
 
 
+<script src="/libs/highlight/highlight.pack.js"></script>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
 
+<script src="/js/js.js"></script>
 
-    <!-- jquery -->
- 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
-
-
-
-
-<!-- clipboard -->
-
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
-  
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
-    btn += '<i class="far fa-clone"></i>';
-    btn += '</span>'; 
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "Copied!");
-      e.clearSelection();
-    })
-  })
-  </script>
-
-
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Cloudflare Analytics -->
-
-<!-- Umami Analytics -->
-
-<!-- Disqus Comments -->
-
-
+<style type="text/css">
+.v * {
+color: #698fca;
+}
+.v .vlist .vcard .vhead .vsys {
+color: #3a3e4a;
+}
+.v .vlist .vcard .vh .vmeta .vat {
+color: #638fd5;
+}
+.v .vlist .vcard .vhead .vnick {
+color: #6ba1ff;
+}
+.v a {
+color: #8696b1;
+}
+.v .vlist .vcard .vhead .vnick:hover {
+color: #669bfc;
+}
+</style>
+    <script type="text/javascript" color="173,174,173" opacity='1' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 </body>
 </html>
