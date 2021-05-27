@@ -9,29 +9,29 @@
     <meta name="description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。 Android的内存泄露后果 直接后果是，内存泄露导致空间浪费，最终导致内存溢出； 间接">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android app闪退原因总结分析">
-<meta property="og:url" content="https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/index.html">
+<meta property="og:url" content="http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Pirate">
 <meta property="og:description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。 Android的内存泄露后果 直接后果是，内存泄露导致空间浪费，最终导致内存溢出； 间接">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2019-03-20T01:38:48.000Z">
 <meta property="article:modified_time" content="2021-05-26T10:13:09.402Z">
-<meta property="article:author" content="Jijun.Suo@gmail.com">
+<meta property="article:author" content="jijun.suo@gmail.com">
 <meta name="twitter:card" content="summary">
     
     
       
         
-          <link rel="shortcut icon" href="/pirateSUO/pirateSUO.github.io/images/favicon.ico">
+          <link rel="shortcut icon" href="/images/favicon.ico">
         
       
       
         
-          <link rel="icon" type="image/png" href="/pirateSUO/pirateSUO.github.io/images/favicon-192x192.png" sizes="192x192">
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
         
       
       
         
-          <link rel="apple-touch-icon" sizes="180x180" href="/pirateSUO/pirateSUO.github.io/images/apple-touch-icon.png">
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
         
       
     
@@ -39,7 +39,7 @@
     <title>android app闪退原因总结分析</title>
     <!-- styles -->
     
-<link rel="stylesheet" href="/pirateSUO/pirateSUO.github.io/css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 
     <!-- persian styles -->
     
@@ -60,13 +60,13 @@
     <span id="nav">
       <ul>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
+          <li><a href="/">Home</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
+          <li><a href="/about/">About</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
+          <li><a href="/archives/">Writing</a></li>
          
-          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </span>
@@ -74,7 +74,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post " href="/pirateSUO/pirateSUO.github.io/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post " href="/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
@@ -88,16 +88,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
 &lt;h2 id=&#34;Android的内存泄露后果&#34;&gt;&lt;a href=&#34;#Android的内存泄露后果&#34; class=&#34;headerlink&#34; title=&#34;Android的内存泄露后果&#34;&gt;&lt;/a&gt;Android的内存泄露后果&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;直接后果是，内存泄露导致空间浪费，最终导致内存溢出；&lt;/li&gt;
 &lt;li&gt;间接后果是，内存不足导致频繁GC，系统性能下降&lt;h2 id=&#34;Android内存泄露场景&#34;&gt;&lt;a href=&#34;#Android内存泄露场景&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露场景&#34;&gt;&lt;/a&gt;Android内存泄露场景&lt;/h2&gt;&lt;/li&gt;
@@ -111,7 +111,7 @@
 &lt;li&gt;虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&lt;br&gt;&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。&lt;/li&gt;
 &lt;/ol&gt;
 "><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -135,7 +135,7 @@
 
     <div class="meta">
       <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span itemprop="name">Jijun.Suo@gmail.com</span>
+        <span itemprop="name">jijun.suo@gmail.com</span>
       </span>
       
     <div class="postdate">
@@ -181,13 +181,13 @@
     <div id="nav-footer" style="display: none">
       <ul>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
+          <li><a href="/">Home</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
+          <li><a href="/about/">About</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
+          <li><a href="/archives/">Writing</a></li>
          
-          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </div>
@@ -198,16 +198,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
 &lt;h2 id=&#34;Android的内存泄露后果&#34;&gt;&lt;a href=&#34;#Android的内存泄露后果&#34; class=&#34;headerlink&#34; title=&#34;Android的内存泄露后果&#34;&gt;&lt;/a&gt;Android的内存泄露后果&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;直接后果是，内存泄露导致空间浪费，最终导致内存溢出；&lt;/li&gt;
 &lt;li&gt;间接后果是，内存不足导致频繁GC，系统性能下降&lt;h2 id=&#34;Android内存泄露场景&#34;&gt;&lt;a href=&#34;#Android内存泄露场景&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露场景&#34;&gt;&lt;/a&gt;Android内存泄露场景&lt;/h2&gt;&lt;/li&gt;
@@ -221,7 +221,7 @@
 &lt;li&gt;虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&lt;br&gt;&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。&lt;/li&gt;
 &lt;/ol&gt;
 "><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/pirateSUO/pirateSUO.github.io/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -243,19 +243,19 @@
     
     
     2016-2021
-    Jijun.Suo@gmail.com
+    jijun.suo@gmail.com
   </div>
   <div class="footer-right">
     <nav>
       <ul>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
+          <li><a href="/">Home</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
+          <li><a href="/about/">About</a></li>
          
-          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
+          <li><a href="/archives/">Writing</a></li>
          
-          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
+          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </nav>
@@ -303,7 +303,7 @@
   </script>
 
 
-<script src="/pirateSUO/pirateSUO.github.io/js/main.js"></script>
+<script src="/js/main.js"></script>
 
 <!-- search -->
 
