@@ -9,7 +9,7 @@
     <meta name="description" content="虚拟机centos7搭建k8s1、踩坑大全 centos7安装的docker后，默认非root用户无法使用，所以需要创建docker组，把当前普通用户加入到组中，这里参考链接：设置docker非root用户正常使用 在给docker配置镜像加速地址，daemon.json中追加registry-mirrors时，没有加入上一行的逗号，导致docker重启失败，加入逗号，daemon.json符合j">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Install K8S in centos7">
-<meta property="og:url" content="http://example.com/2021/01/09/Install-K8S-in-centos7/index.html">
+<meta property="og:url" content="https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/index.html">
 <meta property="og:site_name" content="Pirate">
 <meta property="og:description" content="虚拟机centos7搭建k8s1、踩坑大全 centos7安装的docker后，默认非root用户无法使用，所以需要创建docker组，把当前普通用户加入到组中，这里参考链接：设置docker非root用户正常使用 在给docker配置镜像加速地址，daemon.json中追加registry-mirrors时，没有加入上一行的逗号，导致docker重启失败，加入逗号，daemon.json符合j">
 <meta property="og:locale" content="en_US">
@@ -25,17 +25,17 @@
     
       
         
-          <link rel="shortcut icon" href="/images/favicon.ico">
+          <link rel="shortcut icon" href="/pirateSUO/pirateSUO.github.io/images/favicon.ico">
         
       
       
         
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          <link rel="icon" type="image/png" href="/pirateSUO/pirateSUO.github.io/images/favicon-192x192.png" sizes="192x192">
         
       
       
         
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          <link rel="apple-touch-icon" sizes="180x180" href="/pirateSUO/pirateSUO.github.io/images/apple-touch-icon.png">
         
       
     
@@ -43,7 +43,7 @@
     <title>Install K8S in centos7</title>
     <!-- styles -->
     
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/pirateSUO/pirateSUO.github.io/css/style.css">
 
     <!-- persian styles -->
     
@@ -64,13 +64,13 @@
     <span id="nav">
       <ul>
          
-          <li><a href="/">Home</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
          
-          <li><a href="/about/">About</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
          
-          <li><a href="/archives/">Writing</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
          
-          <li><a href="/projects_url">Projects</a></li>
+          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </span>
@@ -78,10 +78,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post " href="/2021/05/26/hello-world/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post " href="/pirateSUO/pirateSUO.github.io/2021/05/26/hello-world/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="Next post " href="/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post " href="/pirateSUO/pirateSUO.github.io/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -94,16 +94,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/01/09/Install-K8S-in-centos7/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&text=Install K8S in centos7"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&is_video=false&description=Install K8S in centos7"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Install K8S in centos7&body=Check out this article: http://example.com/2021/01/09/Install-K8S-in-centos7/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&name=Install K8S in centos7&description=&lt;h2 id=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;a href=&#34;#虚拟机centos7搭建k8s&#34; class=&#34;headerlink&#34; title=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;/a&gt;虚拟机centos7搭建k8s&lt;/h2&gt;&lt;h2 id=&#34;1、踩坑大全&#34;&gt;&lt;a href=&#34;#1、踩坑大全&#34; class=&#34;headerlink&#34; title=&#34;1、踩坑大全&#34;&gt;&lt;/a&gt;1、踩坑大全&lt;/h2&gt;&lt;ol&gt;
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&text=Install K8S in centos7"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&is_video=false&description=Install K8S in centos7"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Install K8S in centos7&body=Check out this article: https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&name=Install K8S in centos7&description=&lt;h2 id=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;a href=&#34;#虚拟机centos7搭建k8s&#34; class=&#34;headerlink&#34; title=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;/a&gt;虚拟机centos7搭建k8s&lt;/h2&gt;&lt;h2 id=&#34;1、踩坑大全&#34;&gt;&lt;a href=&#34;#1、踩坑大全&#34; class=&#34;headerlink&#34; title=&#34;1、踩坑大全&#34;&gt;&lt;/a&gt;1、踩坑大全&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;centos7安装的docker后，默认非root用户无法使用，所以需要创建docker组，把当前普通用户加入到组中，这里参考链接：&lt;a href=&#34;https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue&#34;&gt;设置docker非root用户正常使用&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;在给docker配置镜像加速地址，daemon.json中追加registry-mirrors时，没有加入上一行的逗号，导致docker重启失败，加入逗号，daemon.json符合json文件规范就可以了，如下图所示是失败案例：&lt;br&gt;&lt;img src=&#34;https://img-blog.csdnimg.cn/20210109133114411.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BpcmF0ZXNqamNm,size_16,color_FFFFFF,t_70#pic_center&#34; alt=&#34;途中红圈处要追加逗号&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
@@ -112,7 +112,7 @@
 &lt;li&gt;slave节点默认程序：&lt;br&gt;&lt;img src=&#34;https://img-blog.csdnimg.cn/20210109125148921.PNG#pic_center&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
 "><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/01/09/Install-K8S-in-centos7/&t=Install K8S in centos7"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&t=Install K8S in centos7"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -177,13 +177,13 @@
     <div id="nav-footer" style="display: none">
       <ul>
          
-          <li><a href="/">Home</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
          
-          <li><a href="/about/">About</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
          
-          <li><a href="/archives/">Writing</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
          
-          <li><a href="/projects_url">Projects</a></li>
+          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </div>
@@ -194,16 +194,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/01/09/Install-K8S-in-centos7/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&text=Install K8S in centos7"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&is_video=false&description=Install K8S in centos7"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Install K8S in centos7&body=Check out this article: http://example.com/2021/01/09/Install-K8S-in-centos7/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/01/09/Install-K8S-in-centos7/&name=Install K8S in centos7&description=&lt;h2 id=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;a href=&#34;#虚拟机centos7搭建k8s&#34; class=&#34;headerlink&#34; title=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;/a&gt;虚拟机centos7搭建k8s&lt;/h2&gt;&lt;h2 id=&#34;1、踩坑大全&#34;&gt;&lt;a href=&#34;#1、踩坑大全&#34; class=&#34;headerlink&#34; title=&#34;1、踩坑大全&#34;&gt;&lt;/a&gt;1、踩坑大全&lt;/h2&gt;&lt;ol&gt;
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&text=Install K8S in centos7"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&is_video=false&description=Install K8S in centos7"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Install K8S in centos7&body=Check out this article: https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&title=Install K8S in centos7"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&name=Install K8S in centos7&description=&lt;h2 id=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;a href=&#34;#虚拟机centos7搭建k8s&#34; class=&#34;headerlink&#34; title=&#34;虚拟机centos7搭建k8s&#34;&gt;&lt;/a&gt;虚拟机centos7搭建k8s&lt;/h2&gt;&lt;h2 id=&#34;1、踩坑大全&#34;&gt;&lt;a href=&#34;#1、踩坑大全&#34; class=&#34;headerlink&#34; title=&#34;1、踩坑大全&#34;&gt;&lt;/a&gt;1、踩坑大全&lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;centos7安装的docker后，默认非root用户无法使用，所以需要创建docker组，把当前普通用户加入到组中，这里参考链接：&lt;a href=&#34;https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue&#34;&gt;设置docker非root用户正常使用&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;在给docker配置镜像加速地址，daemon.json中追加registry-mirrors时，没有加入上一行的逗号，导致docker重启失败，加入逗号，daemon.json符合json文件规范就可以了，如下图所示是失败案例：&lt;br&gt;&lt;img src=&#34;https://img-blog.csdnimg.cn/20210109133114411.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BpcmF0ZXNqamNm,size_16,color_FFFFFF,t_70#pic_center&#34; alt=&#34;途中红圈处要追加逗号&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
@@ -212,7 +212,7 @@
 &lt;li&gt;slave节点默认程序：&lt;br&gt;&lt;img src=&#34;https://img-blog.csdnimg.cn/20210109125148921.PNG#pic_center&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/li&gt;
 &lt;/ol&gt;
 "><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/01/09/Install-K8S-in-centos7/&t=Install K8S in centos7"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://github.com/pirateSUO/pirateSUO.github.io/2021/01/09/Install-K8S-in-centos7/&t=Install K8S in centos7"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -240,13 +240,13 @@
     <nav>
       <ul>
          
-          <li><a href="/">Home</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/">Home</a></li>
          
-          <li><a href="/about/">About</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/about/">About</a></li>
          
-          <li><a href="/archives/">Writing</a></li>
+          <li><a href="/pirateSUO/pirateSUO.github.io/archives/">Writing</a></li>
          
-          <li><a href="/projects_url">Projects</a></li>
+          <li><a href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
         
       </ul>
     </nav>
@@ -294,7 +294,7 @@
   </script>
 
 
-<script src="/js/main.js"></script>
+<script src="/pirateSUO/pirateSUO.github.io/js/main.js"></script>
 
 <!-- search -->
 
