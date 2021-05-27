@@ -1,145 +1,161 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang=en>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="pragma" content="no-cache">
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta http-equiv="expires" content="0">
-  
-  <title>android app闪退原因总结分析 | Hexo</title>
-  <meta name="author" content="John Doe">
-  
-  <meta name="description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。
-Android的内存泄露后果
-直接后果是，内存泄露导致空间浪费，最终导致内存溢出；
-间接后果是，内存不足导致频繁GC，系统性能下降Android内存泄露场景
-单例模式中引用四大组建，最常见的是单例中引用Activity的context，导致该Activity在内存中存活的周期和Application一样长，GC无法正常回收。&amp;ensp;&amp;ensp;解决办法：单例模式应用ApplicationContext，该引用和应用的生命周期一样长
-非静态内部类或匿名内部类，该类对象持有外部类的强引用，如果该类的对象进行耗时操作，无法短期内被回收，那他持有的外部对象也无法及时回收，典型场景有：匿名Thread类异步执行耗时操作，非静态Handler对象，其中有未完成的异步信息。&amp;ensp;&amp;ensp;解决办法：内部类如果任务繁重，可以考虑使用静态内部类，静态内部类独立于外部类存在，典型的应用场景如RecyclerView中的VIewHolder。
-集合中存储静态对象，导致集合占用的空间无法及时释放。&amp;ensp;&amp;ensp;解决办法：。。。
-资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。&amp;ensp;&amp;ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。补充学习一下java的各种引用
-强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；
-软引用：当内存不够时，GC会先回收这类引用；SoftReference bs = SoftReference(b)；
-弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference sr = new WeakReference(b)；
-虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。"> 
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。 Android的内存泄露后果 直接后果是，内存泄露导致空间浪费，最终导致内存溢出； 间接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android app闪退原因总结分析">
+<meta property="og:url" content="http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Pirate">
+<meta property="og:description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。 Android的内存泄露后果 直接后果是，内存泄露导致空间浪费，最终导致内存溢出； 间接">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-03-20T01:38:48.000Z">
+<meta property="article:modified_time" content="2021-05-26T10:13:09.402Z">
+<meta property="article:author" content="Jijun.Suo@gmail.com">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>android app闪退原因总结分析</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
 
-  <meta property="og:title" content="android app闪退原因总结分析"/>
-  <meta property="og:site_name" content="Hexo"/>
-
-  
-    <meta property="og:image" content=""/>
-  
-
-  
-  
-    <link href="/favicon.png" rel="icon">
-  
-  
-  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-  <script src="/js/jquery-2.0.3.min.js"></script>
-
-  <!-- analytics -->
-  
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-70812759-1');
-</script>
-
-
-
-
-
-
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 5.4.0"></head>
 
- <body>  
-  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-		<span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-	  <a class="navbar-brand" href="/">Hexo</a>
-      <div class="collapse navbar-collapse nav-menu">
-		<ul class="nav navbar-nav">
-		  
-		  <li>
-			<a href="/archives" title="All the articles.">
-			  <i class=""></i>Archives
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/categories" title="All the categories.">
-			  <i class=""></i>Categories
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/tags" title="All the tags.">
-			  <i class=""></i>Tags
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/about" title="About me.">
-			  <i class=""></i>About
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class=""></i>RSS
-			</a>
-		  </li>
-		  
-		</ul>
-      </div>
-    </div> <!-- container -->
-</nav>
-<div class="clearfix"></div>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
+&lt;h2 id=&#34;Android的内存泄露后果&#34;&gt;&lt;a href=&#34;#Android的内存泄露后果&#34; class=&#34;headerlink&#34; title=&#34;Android的内存泄露后果&#34;&gt;&lt;/a&gt;Android的内存泄露后果&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;直接后果是，内存泄露导致空间浪费，最终导致内存溢出；&lt;/li&gt;
+&lt;li&gt;间接后果是，内存不足导致频繁GC，系统性能下降&lt;h2 id=&#34;Android内存泄露场景&#34;&gt;&lt;a href=&#34;#Android内存泄露场景&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露场景&#34;&gt;&lt;/a&gt;Android内存泄露场景&lt;/h2&gt;&lt;/li&gt;
+&lt;li&gt;单例模式中引用四大组建，最常见的是单例中引用Activity的context，导致该Activity在内存中存活的周期和Application一样长，GC无法正常回收。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：单例模式应用ApplicationContext，该引用和应用的生命周期一样长&lt;/li&gt;
+&lt;li&gt;非静态内部类或匿名内部类，该类对象持有外部类的强引用，如果该类的对象进行耗时操作，无法短期内被回收，那他持有的外部对象也无法及时回收，典型场景有：匿名Thread类异步执行耗时操作，非静态Handler对象，其中有未完成的异步信息。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：内部类如果任务繁重，可以考虑使用静态内部类，静态内部类独立于外部类存在，典型的应用场景如RecyclerView中的VIewHolder。&lt;/li&gt;
+&lt;li&gt;集合中存储静态对象，导致集合占用的空间无法及时释放。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：。。。&lt;/li&gt;
+&lt;li&gt;资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。&lt;h2 id=&#34;补充学习一下java的各种引用&#34;&gt;&lt;a href=&#34;#补充学习一下java的各种引用&#34; class=&#34;headerlink&#34; title=&#34;补充学习一下java的各种引用&#34;&gt;&lt;/a&gt;补充学习一下java的各种引用&lt;/h2&gt;&lt;/li&gt;
+&lt;li&gt;强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；&lt;/li&gt;
+&lt;li&gt;软引用：当内存不够时，GC会先回收这类引用；SoftReference&lt;b&gt; bs = SoftReference&lt;b&gt;(b)；&lt;/b&gt;&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference&lt;b&gt; sr = new WeakReference&lt;b&gt;(b)；&lt;/b&gt;&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&lt;br&gt;&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。&lt;/li&gt;
+&lt;/ol&gt;
+"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
 
-  <div class="container">
-  	<div class="content">
-    	 
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">Android内存泄露概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%90%8E%E6%9E%9C"><span class="toc-number">2.</span> <span class="toc-text">Android的内存泄露后果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%9C%BA%E6%99%AF"><span class="toc-number">3.</span> <span class="toc-text">Android内存泄露场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%8Bjava%E7%9A%84%E5%90%84%E7%A7%8D%E5%BC%95%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">补充学习一下java的各种引用</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        android app闪退原因总结分析
+    </h1>
 
 
-	
-		<div class="page-header">
-			<h1> android app闪退原因总结分析</h1>
-		</div>
-	
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Jijun.Suo@gmail.com</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-20T01:38:48.000Z" itemprop="datePublished">2019-03-20</time>
+        
+      
+    </div>
 
 
+      
 
-<div class="row post">
-	<!-- cols -->
-	
-	<div id="top_meta"></div>
-	<div class="col-md-9">
-	
+      
 
-	<!-- content -->
-	<div class="mypage">		
-	  		
+    </div>
+  </header>
+  
 
-	  <h2 id="Android内存泄露概述"><a href="#Android内存泄露概述" class="headerlink" title="Android内存泄露概述"></a>Android内存泄露概述</h2><p>&ensp;&ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。<br>&ensp;&ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。</p>
+  <div class="content" itemprop="articleBody">
+    <h2 id="Android内存泄露概述"><a href="#Android内存泄露概述" class="headerlink" title="Android内存泄露概述"></a>Android内存泄露概述</h2><p>&ensp;&ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。<br>&ensp;&ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。</p>
 <h2 id="Android的内存泄露后果"><a href="#Android的内存泄露后果" class="headerlink" title="Android的内存泄露后果"></a>Android的内存泄露后果</h2><ol>
 <li>直接后果是，内存泄露导致空间浪费，最终导致内存溢出；</li>
 <li>间接后果是，内存不足导致频繁GC，系统性能下降<h2 id="Android内存泄露场景"><a href="#Android内存泄露场景" class="headerlink" title="Android内存泄露场景"></a>Android内存泄露场景</h2></li>
@@ -153,162 +169,154 @@ Android的内存泄露后果
 <li>虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。<br>&ensp;&ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。</li>
 </ol>
 
-	  <div class="article-footer-copyright">
-    <a href="https://www.ustc.edu.cn/" target="https://www.ustc.edu.cn/">Copyright reserved by SJJ.</a>
-</div>
-
-	</div>
-
-	
-	<span id="/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/" class="leancloud-visitors view" data-flag-title="android app闪退原因总结分析">
-		<em class="post-meta-item-text"> Page View </em> <i class="leancloud-visitors-count"></i>
-	</span>
-	
-	<div>
-  	<center>
-
-	<div class="pagination">
-
-    
-    
-    <a href="/2019/03/20/AIDL原理和相关文件解析/" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> Prev</a>
-    
-
-    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
-    
-    <a type="button" class="btn btn-default disabled">Next<i class="fa fa-arrow-circle-o-right"></i></a>
-    
-
-    
-</div>
-
-
-    </center>
-	</div>
-	
-	<!-- comment -->
-	<!--
-<section id="comment">
-    <h2 class="title">Comments</h2>
-
-    
-</section>
-
--->
-	
-		<section id="comments" class="comments">
-			<style>
-			.comments{margin:30px;padding:10px;background:rgb(0, 0, 0)}
-			@media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#000}}
-			</style>
-			<div id="vcomment" class="comment"></div>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-var valineConfig = {"enable":true,"appId":"xxx","appKey":"xxx","placeholder":"提交评论时留下邮箱收到回复后将自动通知","visitor":true,"avatar":"monsterid","requiredFields":["nick","mail"]}
-valineConfig.el='#vcomment';
-new Valine(valineConfig);
-    // new Valine({
-    //     el: '#vcomment',
-    //     appId: "",
-    //     appKey: "",
-    //     placeholder: "提交评论时留下邮箱收到回复后将自动通知",
-    //     avatar:"monsterid",
-    //     visitor: "true",
-    //     requiredFields: "nick,mail".split(','),
-    // });
-</script>
-
-		</section>
-	
-	</div> <!-- col-md-9/col-md-12 -->
-
-
-	
-	<div id="side_meta">
-		<div class="col-md-3" id="post_meta"> 
-
-	<!-- date -->
-	
-	<div class="meta-widget">
-	<i class="fa fa-clock-o"></i>
-	2019-03-20 
-	</div>
-	
-
-	<!-- categories -->
-    
-
-	<!-- tags -->
-		
-
-	<!-- toc -->
-	<div class="meta-widget">
-	
-	</div>
-	
-    <hr>
-	
-</div><!-- col-md-3 -->
-
-		
-
-	</div>
-	
-		
-
-</div><!-- row -->
-
-<!--
- -->
-
-
-
-	</div>
   </div>
-  <div class="container-narrow">
-  <footer> <p>
-  
-  &copy; 2021 John Doe's Blog
-  
-      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
-</p>
- </footer>
-</div> <!-- container-narrow -->
-  
+</article>
 
 
-  
-<a id="gotop" href="#">   
-  <span>⬆︎TOP</span>
-</a>
 
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">Android内存泄露概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%90%8E%E6%9E%9C"><span class="toc-number">2.</span> <span class="toc-text">Android的内存泄露后果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%9C%BA%E6%99%AF"><span class="toc-number">3.</span> <span class="toc-text">Android内存泄露场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E5%AD%A6%E4%B9%A0%E4%B8%80%E4%B8%8Bjava%E7%9A%84%E5%90%84%E7%A7%8D%E5%BC%95%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">补充学习一下java的各种引用</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&text=android app闪退原因总结分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&is_video=false&description=android app闪退原因总结分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=android app闪退原因总结分析&body=Check out this article: http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&title=android app闪退原因总结分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&name=android app闪退原因总结分析&description=&lt;h2 id=&#34;Android内存泄露概述&#34;&gt;&lt;a href=&#34;#Android内存泄露概述&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露概述&#34;&gt;&lt;/a&gt;Android内存泄露概述&lt;/h2&gt;&lt;p&gt;&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&lt;br&gt;&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。&lt;/p&gt;
+&lt;h2 id=&#34;Android的内存泄露后果&#34;&gt;&lt;a href=&#34;#Android的内存泄露后果&#34; class=&#34;headerlink&#34; title=&#34;Android的内存泄露后果&#34;&gt;&lt;/a&gt;Android的内存泄露后果&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;直接后果是，内存泄露导致空间浪费，最终导致内存溢出；&lt;/li&gt;
+&lt;li&gt;间接后果是，内存不足导致频繁GC，系统性能下降&lt;h2 id=&#34;Android内存泄露场景&#34;&gt;&lt;a href=&#34;#Android内存泄露场景&#34; class=&#34;headerlink&#34; title=&#34;Android内存泄露场景&#34;&gt;&lt;/a&gt;Android内存泄露场景&lt;/h2&gt;&lt;/li&gt;
+&lt;li&gt;单例模式中引用四大组建，最常见的是单例中引用Activity的context，导致该Activity在内存中存活的周期和Application一样长，GC无法正常回收。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：单例模式应用ApplicationContext，该引用和应用的生命周期一样长&lt;/li&gt;
+&lt;li&gt;非静态内部类或匿名内部类，该类对象持有外部类的强引用，如果该类的对象进行耗时操作，无法短期内被回收，那他持有的外部对象也无法及时回收，典型场景有：匿名Thread类异步执行耗时操作，非静态Handler对象，其中有未完成的异步信息。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：内部类如果任务繁重，可以考虑使用静态内部类，静态内部类独立于外部类存在，典型的应用场景如RecyclerView中的VIewHolder。&lt;/li&gt;
+&lt;li&gt;集合中存储静态对象，导致集合占用的空间无法及时释放。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：。。。&lt;/li&gt;
+&lt;li&gt;资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。&lt;br&gt;&amp;ensp;&amp;ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。&lt;h2 id=&#34;补充学习一下java的各种引用&#34;&gt;&lt;a href=&#34;#补充学习一下java的各种引用&#34; class=&#34;headerlink&#34; title=&#34;补充学习一下java的各种引用&#34;&gt;&lt;/a&gt;补充学习一下java的各种引用&lt;/h2&gt;&lt;/li&gt;
+&lt;li&gt;强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；&lt;/li&gt;
+&lt;li&gt;软引用：当内存不够时，GC会先回收这类引用；SoftReference&lt;b&gt; bs = SoftReference&lt;b&gt;(b)；&lt;/b&gt;&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference&lt;b&gt; sr = new WeakReference&lt;b&gt;(b)；&lt;/b&gt;&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&lt;br&gt;&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。&lt;/li&gt;
+&lt;/ol&gt;
+"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/&t=android app闪退原因总结分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    Jijun.Suo@gmail.com
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
 <script src="/js/main.js"></script>
-<script src="/js/search.js"></script> 
 
+<!-- search -->
 
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-  $('.fancybox').fancybox();
-})(jQuery);
-</script>
+<!-- Google Analytics -->
 
+<!-- Baidu Analytics -->
 
+<!-- Cloudflare Analytics -->
 
-   <script type="text/javascript">      
-     var search_path = "search.xml";
-	 if (search_path.length == 0) {
-	 	search_path = "search.xml";
-	 }
-	 var path = "/" + search_path;
-     searchFunc(path, 'local-search-input', 'local-search-result');
-   </script>
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
 
 </body>
-   </html>
+</html>
