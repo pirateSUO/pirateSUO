@@ -1,159 +1,28 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="#(About)Mainly work as a Engineer of test developer for Android client and golang server,knows a little programming language and is interested in everything based on the Linux operating system, such a">
-<meta property="og:type" content="website">
-<meta property="og:title" content="About">
-<meta property="og:url" content="http://example.com/about/index.html">
-<meta property="og:site_name" content="Pirate">
-<meta property="og:description" content="#(About)Mainly work as a Engineer of test developer for Android client and golang server,knows a little programming language and is interested in everything based on the Linux operating system, such a">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-27T03:32:57.000Z">
-<meta property="article:modified_time" content="2021-05-27T03:51:56.733Z">
-<meta property="article:author" content="jijun.suo@gmail.com">
-<meta name="twitter:card" content="summary">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>About</title>
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
+{% extends 'includes/layout.swig' %}
 
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-<meta name="generator" content="Hexo 5.4.0"></head>
+{% block body %}
+  <article id="page">
+    {% set page_title = page.title %}
+    {% if 'categories' === page.type %}
+      <h1 class="center-title">{{ page_title || __('category_title') }}</h1>
+      {{ list_categories() }}
+    {% elif 'tags' === page.type %}
+      <h1 class="center-title">{{ page_title || __('tag_title') }}</h1>
+      <div class="tag-cloud-tags">
+        {{ tagcloud({min_font: 16, max_font: 32, amount: 200, color: true, start_color: '#999', end_color: '#444'}) }}
+      </div>
+    {% else %}
+      <h1 class="">{{ page_title }}</h1>
+      {% if page.photos.length %}
+        {% include 'includes/gallery.swig' %}
+      {% endif %}
+      {% autoescape false %}{{page.content }}{% endautoescape %}
+      {% if page.comments && (theme.valine.enable) %}
+        {% include 'includes/valine.swig' %}
+      {% endif %}
+    {% endif %}
+  </article>
 
-<body class="max-width mx-auto px3 ltr">
-    
-    <div class="content index py4">
-        
-          <header id="header">
-  <a href="/">
-  
-    
-      <div id="logo" style="background-image: url(/images/logo.png);"></div>
-    
-  
-    <div id="title">
-      <h1>Pirate</h1>
-    </div>
-  </a>
-  <div id="nav">
-    <ul>
-      <li class="icon">
-        <a href="#" aria-label="Menu"><i class="fas fa-bars fa-2x"></i></a>
-      </li>
-       
-        <li><a href="/">Home</a></li>
-       
-        <li><a href="/about/">About</a></li>
-       
-        <li><a href="/archives/">Writing</a></li>
-       
-        <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
-      
-    </ul>
-  </div>
-</header>
-
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-  
-
-  <div class="content" itemprop="articleBody">
-      
-          <p>#(About)<br>Mainly work as a Engineer of test developer for Android client and golang server,knows a little programming language and is interested in everything based on the Linux operating system, such as Android, Docker etc. I have used many different languages ​​at different stages, and currently mainly use golang and python programming languages. Are working hard</p>
-<p>My blogs: <a target="_blank" rel="noopener" href="https://piratesuo.github.io/">link</a>.</p>
-
-        
-  </div>
-</article>
-
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2016-2021
-    jijun.suo@gmail.com
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-         
-          <li><a href="/">Home</a></li>
-         
-          <li><a href="/about/">About</a></li>
-         
-          <li><a href="/archives/">Writing</a></li>
-         
-          <li><a target="_blank" rel="noopener" href="https://github.com/pirateSUO/pirateSUO.github.io">Projects</a></li>
-        
-      </ul>
-    </nav>
-  </div>
-</footer>
-
-    </div>
-    <!-- styles -->
-
-
-
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
- 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
-
-
-
-
-<!-- clipboard -->
-
-
-<script src="/js/main.js"></script>
-
-<!-- search -->
-
-<!-- Google Analytics -->
-
-<!-- Baidu Analytics -->
-
-<!-- Cloudflare Analytics -->
-
-<!-- Umami Analytics -->
-
-<!-- Disqus Comments -->
-
-
-</body>
-</html>
+  {% include 'includes/pagination.swig' %}
+  {% include 'includes/jiathis.swig' %}
+{% endblock %}
