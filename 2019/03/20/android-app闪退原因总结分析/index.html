@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="google-site-verification" content="TZE0rZyIqLl10trYu3BWBWa1Vmz6HFwhb2OcNEK4u-s" />
-     <link rel="shortcut icon" href= /img/touxiang.ico >
+     <link rel="shortcut icon" href= /img/touxiang.jpg >
     <title>
         Pirate
     </title>
@@ -42,8 +42,8 @@
 <li>集合中存储静态对象，导致集合占用的空间无法及时释放。<br>&ensp;&ensp;解决办法：。。。</li>
 <li>资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。<br>&ensp;&ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。<h2 id="补充学习一下java的各种引用"><a href="#补充学习一下java的各种引用" class="headerlink" title="补充学习一下java的各种引用"></a>补充学习一下java的各种引用</h2></li>
 <li>强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；</li>
-<li>软引用：当内存不够时，GC会先回收这类引用；SoftReference<B> bs = SoftReference<B>(b)；</li>
-<li>弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference<B> sr = new WeakReference<B>(b)；</li>
+<li>软引用：当内存不够时，GC会先回收这类引用；SoftReference<B> bs = SoftReference<B>(b)；</B></B></li>
+<li>弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference<B> sr = new WeakReference<B>(b)；</B></B></li>
 <li>虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。<br>&ensp;&ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。</li>
 </ol>
 
