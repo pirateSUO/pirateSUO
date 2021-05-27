@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>android app闪退原因总结分析 | Hexo</title>
+  <meta name="author" content="John Doe">
+  
+  <meta name="description" content="Android内存泄露概述&amp;ensp;&amp;ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。&amp;ensp;&amp;ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。
+Android的内存泄露后果
+直接后果是，内存泄露导致空间浪费，最终导致内存溢出；
+间接后果是，内存不足导致频繁GC，系统性能下降Android内存泄露场景
+单例模式中引用四大组建，最常见的是单例中引用Activity的context，导致该Activity在内存中存活的周期和Application一样长，GC无法正常回收。&amp;ensp;&amp;ensp;解决办法：单例模式应用ApplicationContext，该引用和应用的生命周期一样长
+非静态内部类或匿名内部类，该类对象持有外部类的强引用，如果该类的对象进行耗时操作，无法短期内被回收，那他持有的外部对象也无法及时回收，典型场景有：匿名Thread类异步执行耗时操作，非静态Handler对象，其中有未完成的异步信息。&amp;ensp;&amp;ensp;解决办法：内部类如果任务繁重，可以考虑使用静态内部类，静态内部类独立于外部类存在，典型的应用场景如RecyclerView中的VIewHolder。
+集合中存储静态对象，导致集合占用的空间无法及时释放。&amp;ensp;&amp;ensp;解决办法：。。。
+资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。&amp;ensp;&amp;ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。补充学习一下java的各种引用
+强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；
+软引用：当内存不够时，GC会先回收这类引用；SoftReference bs = SoftReference(b)；
+弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference sr = new WeakReference(b)；
+虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。&amp;ensp;&amp;ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。"> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="android app闪退原因总结分析"/>
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Hexo</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> android app闪退原因总结分析</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h2 id="Android内存泄露概述"><a href="#Android内存泄露概述" class="headerlink" title="Android内存泄露概述"></a>Android内存泄露概述</h2><p>&ensp;&ensp;了解Android内存泄露之前，需要对java的内存管理和GC机制有个简单的了解。<br>&ensp;&ensp;Android内存泄露的根本原因是引用者的生命周期大于被引用者。举个例子，有对象A，B，B有A的强引用，GC要回收A时发现B还未销毁，所以A也未能被回收。</p>
+<h2 id="Android的内存泄露后果"><a href="#Android的内存泄露后果" class="headerlink" title="Android的内存泄露后果"></a>Android的内存泄露后果</h2><ol>
+<li>直接后果是，内存泄露导致空间浪费，最终导致内存溢出；</li>
+<li>间接后果是，内存不足导致频繁GC，系统性能下降<h2 id="Android内存泄露场景"><a href="#Android内存泄露场景" class="headerlink" title="Android内存泄露场景"></a>Android内存泄露场景</h2></li>
+<li>单例模式中引用四大组建，最常见的是单例中引用Activity的context，导致该Activity在内存中存活的周期和Application一样长，GC无法正常回收。<br>&ensp;&ensp;解决办法：单例模式应用ApplicationContext，该引用和应用的生命周期一样长</li>
+<li>非静态内部类或匿名内部类，该类对象持有外部类的强引用，如果该类的对象进行耗时操作，无法短期内被回收，那他持有的外部对象也无法及时回收，典型场景有：匿名Thread类异步执行耗时操作，非静态Handler对象，其中有未完成的异步信息。<br>&ensp;&ensp;解决办法：内部类如果任务繁重，可以考虑使用静态内部类，静态内部类独立于外部类存在，典型的应用场景如RecyclerView中的VIewHolder。</li>
+<li>集合中存储静态对象，导致集合占用的空间无法及时释放。<br>&ensp;&ensp;解决办法：。。。</li>
+<li>资源没有关闭，例如文件操作、网络流、广播未注销、Service脱离Activity未停止运行、观察者模式未解除监听等等。<br>&ensp;&ensp;解决办法：养成良好的编程习惯，成对出现的open，close要一起使用。<h2 id="补充学习一下java的各种引用"><a href="#补充学习一下java的各种引用" class="headerlink" title="补充学习一下java的各种引用"></a>补充学习一下java的各种引用</h2></li>
+<li>强引用：最通用的引用，比如 B  b = new B()，b就是一个强引用，这样该引用存在，GC就不会回收，这也是导致java内存泄露的根本原因；</li>
+<li>软引用：当内存不够时，GC会先回收这类引用；SoftReference<B> bs = SoftReference<B>(b)；</li>
+<li>弱引用：当GC发现一个对象只有弱引用时，马上回收它，WeakReference<B> sr = new WeakReference<B>(b)；</li>
+<li>虚引用：类似于占位符，不影响实际对象的生命周期，GC该怎么做就怎么做。<br>&ensp;&ensp;综上，是java提供的几种引用机制，如果我们加以利用，可以一定程度上减少内存泄露情景，具体用法网上很多，我也正在学习当中。</li>
+</ol>
+
+	  <div class="article-footer-copyright">
+    <a href="https://www.ustc.edu.cn/" target="https://www.ustc.edu.cn/">Copyright reserved by SJJ.</a>
+</div>
+
+	</div>
+
+	
+	<span id="/2019/03/20/android-app%E9%97%AA%E9%80%80%E5%8E%9F%E5%9B%A0%E6%80%BB%E7%BB%93%E5%88%86%E6%9E%90/" class="leancloud-visitors view" data-flag-title="android app闪退原因总结分析">
+		<em class="post-meta-item-text"> Page View </em> <i class="leancloud-visitors-count"></i>
+	</span>
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a href="/2019/03/20/AIDL原理和相关文件解析/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a type="button" class="btn btn-default disabled">Next<i class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+		<section id="comments" class="comments">
+			<style>
+			.comments{margin:30px;padding:10px;background:rgb(0, 0, 0)}
+			@media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#000}}
+			</style>
+			<div id="vcomment" class="comment"></div>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+var valineConfig = {"enable":true,"appId":"xxx","appKey":"xxx","placeholder":"提交评论时留下邮箱收到回复后将自动通知","visitor":true,"avatar":"monsterid","requiredFields":["nick","mail"]}
+valineConfig.el='#vcomment';
+new Valine(valineConfig);
+    // new Valine({
+    //     el: '#vcomment',
+    //     appId: "",
+    //     appKey: "",
+    //     placeholder: "提交评论时留下邮箱收到回复后将自动通知",
+    //     avatar:"monsterid",
+    //     visitor: "true",
+    //     requiredFields: "nick,mail".split(','),
+    // });
+</script>
+
+		</section>
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-03-20 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2021 John Doe's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>

@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>AIDL原理和相关文件解析 | Hexo</title>
+  <meta name="author" content="John Doe">
+  
+  <meta name="description" content="Binder概述&amp;ensp;&amp;ensp;相信从事Android相关的研发人员，都对Binder有个或多或少的了解，相关技术博客也有一大推，我今天对Binder的学习过程进行一个记录，理论性的叙述会少一点，更多的是基于AS自动生成的AIDL文件进行代码分析。但读者事先应该对Binder的Server、Client、ServerManager和Binder驱动要有一定的了解。
+AIDL代码简单分析接口总览&amp;ensp;&amp;ensp;看过《Android开发艺术探索》的同行应该记得，有个经典的BookManager的Demo，如下：
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138public interface BookManager extends android.os.IInterface &amp;#123;    /**     * Local-side IPC implementation stub class.     */    public static abstract class Stub extends android.os.Binder implements android.tplink.sjj.aidltest.BookManager &amp;#123;        private static final java.lang.String DESCRIPTOR = &amp;quot;android.tplink.sjj.aidltest.BookManager&amp;quot;;        /**         * Construct the stub at attach it to the interface.         */        public Stub() &amp;#123;            this.attachInterface(this, DESCRIPTOR);        &amp;#125;        /**         * Cast an IBinder object into an android.tplink.sjj.aidltest.BookManager interface,         * generating a proxy if needed.         */        public static android.tplink.sjj.aidltest.BookManager asInterface(android.os.IBinder obj) &amp;#123;            if ((obj == null)) &amp;#123;                return null;            &amp;#125;            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);            if (((iin != null) &amp;amp;&amp;amp; (iin instanceof android.tplink.sjj.aidltest.BookManager))) &amp;#123;                return ((android.tplink.sjj.aidltest.BookManager) iin);            &amp;#125;            return new android.tplink.sjj.aidltest.BookManager.Stub.Proxy(obj);        &amp;#125;        @Override        public android.os.IBinder asBinder() &amp;#123;            return this;        &amp;#125;        @Override        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &amp;#123;            java.lang.String descriptor = DESCRIPTOR;            switch (code) &amp;#123;            case INTERFACE_TRANSACTION: &amp;#123;                reply.writeString(descriptor);                return true;            &amp;#125;            case TRANSACTION_getBooks: &amp;#123;                data.enforceInterface(descriptor);                java.util.List&amp;lt;android.tplink.sjj.aidltest.Book&amp;gt; _result = this.getBooks();                reply.writeNoException();                reply.writeTypedList(_result);                return true;            &amp;#125;            case TRANSACTION_addBook: &amp;#123;                data.enforceInterface(descriptor);                android.tplink.sjj.aidltest.Book _arg0;                if ((0 != data.readInt())) &amp;#123;                    _arg0 = android.tplink.sjj.aidltest.Book.CREATOR.createFromParcel(data);                &amp;#125; else &amp;#123;                    _arg0 = null;                &amp;#125;                this.addBook(_arg0);                reply.writeNoException();                return true;            &amp;#125;            default: &amp;#123;                return super.onTransact(code, data, reply, flags);            &amp;#125;            &amp;#125;        &amp;#125;        private static class Proxy implements android.tplink.sjj.aidltest.BookManager &amp;#123;            private android.os.IBinder mRemote;            Proxy(android.os.IBinder remote) &amp;#123;                mRemote = remote;            &amp;#125;            @Override            public android.os.IBinder asBinder() &amp;#123;                return mRemote;            &amp;#125;            public java.lang.String getInterfaceDescriptor() &amp;#123;                return DESCRIPTOR;            &amp;#125;            /**             * Demonstrates some basic types that you can use as parameters             * and return values in AIDL.             */            @Override            public java.util.List&amp;lt;android.tplink.sjj.aidltest.Book&amp;gt; getBooks() throws android.os.RemoteException &amp;#123;                android.os.Parcel _data = android.os.Parcel.obtain();                android.os.Parcel _reply = android.os.Parcel.obtain();                java.util.List&amp;lt;android.tplink.sjj.aidltest.Book&amp;gt; _result;                try &amp;#123;                    _data.writeInterfaceToken(DESCRIPTOR);                    mRemote.transact(Stub.TRANSACTION_getBooks, _data, _reply, 0);                    _reply.readException();                    _result = _reply.createTypedArrayList(android.tplink.sjj.aidltest.Book.CREATOR);                &amp;#125; finally &amp;#123;                    _reply.recycle();                    _data.recycle();                &amp;#125;                return _result;            &amp;#125;            @Override            public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException &amp;#123;                android.os.Parcel _data = android.os.Parcel.obtain();                android.os.Parcel _reply = android.os.Parcel.obtain();                try &amp;#123;                    _data.writeInterfaceToken(DESCRIPTOR);                    if ((book != null)) &amp;#123;                        _data.writeInt(1);                        book.writeToParcel(_data, 0);                    &amp;#125; else &amp;#123;                        _data.writeInt(0);                    &amp;#125;                    mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);                    _reply.readException();                &amp;#125; finally &amp;#123;                    _reply.recycle();                    _data.recycle();                &amp;#125;            &amp;#125;        &amp;#125;        static final int TRANSACTION_getBooks = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);    &amp;#125;    /**     * Demonstrates some basic types that you can use as parameters     * and return values in AIDL.     */    public java.util.List&amp;lt;android.tplink.sjj.aidltest.Book&amp;gt; getBooks() throws android.os.RemoteException;    public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException;&amp;#125;
+&amp;ensp;&amp;ensp;简单的说，通过AIDL，AS构建了统一的跨进程通信接口和相应的Binder，其内容如下：
+123456public interface BookManager extends android.os.IInterface &amp;#123;	public static abstract class Stub extends android.os.Binder implements android.tplink.sjj.aidltest.BookManager    public java.util.List&amp;lt;android.tplink.sjj.aidltest.Book&amp;gt; getBooks() throws android.os.RemoteException;    public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException;&amp;#125;
+&amp;ensp;&amp;ensp;标准化后的AIDL继承了IInterface这个系统接口，内部有一个binder子类和我们定义的两个接口。
+Stub文件"> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="AIDL原理和相关文件解析"/>
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Hexo</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> AIDL原理和相关文件解析</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h2 id="Binder概述"><a href="#Binder概述" class="headerlink" title="Binder概述"></a>Binder概述</h2><p>&ensp;&ensp;相信从事Android相关的研发人员，都对Binder有个或多或少的了解，相关技术博客也有一大推，我今天对Binder的学习过程进行一个记录，理论性的叙述会少一点，更多的是基于AS自动生成的AIDL文件进行代码分析。但读者事先应该对Binder的Server、Client、ServerManager和Binder驱动要有一定的了解。</p>
+<h2 id="AIDL代码简单分析"><a href="#AIDL代码简单分析" class="headerlink" title="AIDL代码简单分析"></a>AIDL代码简单分析</h2><h3 id="接口总览"><a href="#接口总览" class="headerlink" title="接口总览"></a>接口总览</h3><p>&ensp;&ensp;看过《Android开发艺术探索》的同行应该记得，有个经典的BookManager的Demo，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">public interface BookManager extends android.os.IInterface &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Local-side IPC implementation stub class.</span><br><span class="line">     */</span><br><span class="line">    public static abstract class Stub extends android.os.Binder implements android.tplink.sjj.aidltest.BookManager &#123;</span><br><span class="line">        private static final java.lang.String DESCRIPTOR = &quot;android.tplink.sjj.aidltest.BookManager&quot;;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Construct the stub at attach it to the interface.</span><br><span class="line">         */</span><br><span class="line">        public Stub() &#123;</span><br><span class="line">            this.attachInterface(this, DESCRIPTOR);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Cast an IBinder object into an android.tplink.sjj.aidltest.BookManager interface,</span><br><span class="line">         * generating a proxy if needed.</span><br><span class="line">         */</span><br><span class="line">        public static android.tplink.sjj.aidltest.BookManager asInterface(android.os.IBinder obj) &#123;</span><br><span class="line">            if ((obj == null)) &#123;</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line">            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">            if (((iin != null) &amp;&amp; (iin instanceof android.tplink.sjj.aidltest.BookManager))) &#123;</span><br><span class="line">                return ((android.tplink.sjj.aidltest.BookManager) iin);</span><br><span class="line">            &#125;</span><br><span class="line">            return new android.tplink.sjj.aidltest.BookManager.Stub.Proxy(obj);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public android.os.IBinder asBinder() &#123;</span><br><span class="line">            return this;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &#123;</span><br><span class="line">            java.lang.String descriptor = DESCRIPTOR;</span><br><span class="line">            switch (code) &#123;</span><br><span class="line">            case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">                reply.writeString(descriptor);</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">            case TRANSACTION_getBooks: &#123;</span><br><span class="line">                data.enforceInterface(descriptor);</span><br><span class="line">                java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; _result = this.getBooks();</span><br><span class="line">                reply.writeNoException();</span><br><span class="line">                reply.writeTypedList(_result);</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">            case TRANSACTION_addBook: &#123;</span><br><span class="line">                data.enforceInterface(descriptor);</span><br><span class="line">                android.tplink.sjj.aidltest.Book _arg0;</span><br><span class="line">                if ((0 != data.readInt())) &#123;</span><br><span class="line">                    _arg0 = android.tplink.sjj.aidltest.Book.CREATOR.createFromParcel(data);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    _arg0 = null;</span><br><span class="line">                &#125;</span><br><span class="line">                this.addBook(_arg0);</span><br><span class="line">                reply.writeNoException();</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">            default: &#123;</span><br><span class="line">                return super.onTransact(code, data, reply, flags);</span><br><span class="line">            &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private static class Proxy implements android.tplink.sjj.aidltest.BookManager &#123;</span><br><span class="line">            private android.os.IBinder mRemote;</span><br><span class="line"></span><br><span class="line">            Proxy(android.os.IBinder remote) &#123;</span><br><span class="line">                mRemote = remote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public android.os.IBinder asBinder() &#123;</span><br><span class="line">                return mRemote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            public java.lang.String getInterfaceDescriptor() &#123;</span><br><span class="line">                return DESCRIPTOR;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            /**</span><br><span class="line">             * Demonstrates some basic types that you can use as parameters</span><br><span class="line">             * and return values in AIDL.</span><br><span class="line">             */</span><br><span class="line">            @Override</span><br><span class="line">            public java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; getBooks() throws android.os.RemoteException &#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; _result;</span><br><span class="line">                try &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_getBooks, _data, _reply, 0);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.createTypedArrayList(android.tplink.sjj.aidltest.Book.CREATOR);</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                return _result;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                try &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    if ((book != null)) &#123;</span><br><span class="line">                        _data.writeInt(1);</span><br><span class="line">                        book.writeToParcel(_data, 0);</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        _data.writeInt(0);</span><br><span class="line">                    &#125;</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        static final int TRANSACTION_getBooks = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);</span><br><span class="line">        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span><br><span class="line">    public java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; getBooks() throws android.os.RemoteException;</span><br><span class="line"></span><br><span class="line">    public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>&ensp;&ensp;简单的说，通过AIDL，AS构建了统一的跨进程通信接口和相应的Binder，其内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public interface BookManager extends android.os.IInterface &#123;</span><br><span class="line"></span><br><span class="line">	public static abstract class Stub extends android.os.Binder implements android.tplink.sjj.aidltest.BookManager</span><br><span class="line">    public java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; getBooks() throws android.os.RemoteException;</span><br><span class="line">    public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&ensp;&ensp;标准化后的AIDL继承了IInterface这个系统接口，内部有一个binder子类和我们定义的两个接口。</p>
+<h3 id="Stub文件"><a href="#Stub文件" class="headerlink" title="Stub文件"></a>Stub文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static abstract class Stub extends android.os.Binder implements android.tplink.sjj.aidltest.BookManager &#123;</span><br><span class="line">    private static final java.lang.String DESCRIPTOR = &quot;android.tplink.sjj.aidltest.BookManager&quot;;</span><br><span class="line">    </span><br><span class="line">    public Stub() &#123; ...... &#125;</span><br><span class="line"></span><br><span class="line">    public static android.tplink.sjj.aidltest.BookManager asInterface(android.os.IBinder obj) &#123; ...... &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public android.os.IBinder asBinder() &#123; ...... &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &#123; ......&#125;</span><br><span class="line"></span><br><span class="line">    private static class Proxy implements android.tplink.sjj.aidltest.BookManager &#123; ...... &#125;</span><br><span class="line"></span><br><span class="line">    static final int TRANSACTION_getBooks = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);</span><br><span class="line">    static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Stub内部结构"><a href="#Stub内部结构" class="headerlink" title="Stub内部结构"></a>Stub内部结构</h3><h4 id="Stub描述符"><a href="#Stub描述符" class="headerlink" title="Stub描述符"></a>Stub描述符</h4><p>&ensp;&ensp;Stub继承了系统的Binder类并且实现了我们自定义的接口，继承了系统Binder类，就可以走系统那一套，可以将自己注册到ServerManger中，其中有自己的一个引用和一个唯一的描述符：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DESCRIPTOR = &quot;android.tplink.sjj.aidltest.BookManager&quot;;</span><br></pre></td></tr></table></figure>
+<p>&ensp;&ensp;这样客户端请求服务端时，就可以用这个描述符进行检索并判断客户端和服务端是否在同一进程内，具体代码后面分析；实现的接口中有我们自定义的方法，这个方法通过Binder机制完成跨进程调用。<br>&ensp;&ensp;Stub构造函数就是构造该Binder子类，其中应该涉及到将自己注册到ServerManager的过程（具体待验证）；<br>&ensp;&ensp;asInterface()方法代码如下，我们结合具体代码分析它的功能：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static android.tplink.sjj.aidltest.BookManager asInterface(android.os.IBinder obj) &#123;</span><br><span class="line">           if ((obj == null)) &#123;</span><br><span class="line">               return null;</span><br><span class="line">           &#125;</span><br><span class="line">           android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">           if (((iin != null) &amp;&amp; (iin instanceof android.tplink.sjj.aidltest.BookManager))) &#123;</span><br><span class="line">               return ((android.tplink.sjj.aidltest.BookManager) iin);</span><br><span class="line">           &#125;</span><br><span class="line">           return new android.tplink.sjj.aidltest.BookManager.Stub.Proxy(obj);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>&ensp;&ensp;该方法传入的是一个Binder接口，方法先判空，非空情况下，在本地池（C/S同一个进程情况）中检索该服务，用的就是该binder的描述符，如果检索到，则直接返回该引用，说明传入的参数就是客户端所需的服务的引用；如果没有在本地检索到，说明这是一个跨进程的调用，返回该binder的一个代理Proxy。<br>&ensp;&ensp;asBinder返回自身，一般是在服务端（四大组件Service的bindService方法中返回Binder的引用），该引用作为客户端调用服务端的凭据。</p>
+<h4 id="Stub内部类Proxy"><a href="#Stub内部类Proxy" class="headerlink" title="Stub内部类Proxy"></a>Stub内部类Proxy</h4><p>&ensp;&ensp;Proxy类是Stub类的内部类，Stub通过它可以完成远程代理。Proxy对客户透明，就如同其他系统服务AMS、WMS、PMS和UMS等等，也是通过代理为客户端（app进程）提供服务。实现代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">private static class Proxy implements android.tplink.sjj.aidltest.BookManager &#123;</span><br><span class="line">           private android.os.IBinder mRemote;</span><br><span class="line"></span><br><span class="line">           Proxy(android.os.IBinder remote) &#123;</span><br><span class="line">               mRemote = remote;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           @Override</span><br><span class="line">           public android.os.IBinder asBinder() &#123;</span><br><span class="line">               return mRemote;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           public java.lang.String getInterfaceDescriptor() &#123;</span><br><span class="line">               return DESCRIPTOR;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           /**</span><br><span class="line">            * Demonstrates some basic types that you can use as parameters</span><br><span class="line">            * and return values in AIDL.</span><br><span class="line">            */</span><br><span class="line">           @Override</span><br><span class="line">           public java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; getBooks() throws android.os.RemoteException &#123;</span><br><span class="line">               android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">               android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">               java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; _result;</span><br><span class="line">               try &#123;</span><br><span class="line">                   _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                   mRemote.transact(Stub.TRANSACTION_getBooks, _data, _reply, 0);</span><br><span class="line">                   _reply.readException();</span><br><span class="line">                   _result = _reply.createTypedArrayList(android.tplink.sjj.aidltest.Book.CREATOR);</span><br><span class="line">               &#125; finally &#123;</span><br><span class="line">                   _reply.recycle();</span><br><span class="line">                   _data.recycle();</span><br><span class="line">               &#125;</span><br><span class="line">               return _result;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           @Override</span><br><span class="line">           public void addBook(android.tplink.sjj.aidltest.Book book) throws android.os.RemoteException &#123;</span><br><span class="line">               android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">               android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">               try &#123;</span><br><span class="line">                   _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                   if ((book != null)) &#123;</span><br><span class="line">                       _data.writeInt(1);</span><br><span class="line">                       book.writeToParcel(_data, 0);</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       _data.writeInt(0);</span><br><span class="line">                   &#125;</span><br><span class="line">                   mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);</span><br><span class="line">                   _reply.readException();</span><br><span class="line">               &#125; finally &#123;</span><br><span class="line">                   _reply.recycle();</span><br><span class="line">                   _data.recycle();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>&ensp;&ensp;Proxy利用binder接口中的transact方法，将序列化后的客户端请求参数传送到服务端，并把服务端的数据用同样的方法解析出来返回给客户端，具体需要依赖底层binder驱动。</p>
+<h4 id="Stub中的接口描述符"><a href="#Stub中的接口描述符" class="headerlink" title="Stub中的接口描述符"></a>Stub中的接口描述符</h4><p>&ensp;&ensp;可以看到Proxy调用_mRemote.tranact()方法时第一个参数是Stub.TRANSACTION_addBook，它和binder描述符类似，也是一个描述符，只不过它是标识调用的方法，服务端接收到Proxy的请求后，通过该参数路由到具体的方法，我们定义的方法有两个，它们的描述符如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">static final int TRANSACTION_getBooks = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);</span><br><span class="line">      static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);</span><br></pre></td></tr></table></figure>
+<p>看过AMS源码的同行应该很熟悉这些代码，在IActivityManager中有大量的方法描述符。</p>
+<h4 id="Stub中的onTransact方法"><a href="#Stub中的onTransact方法" class="headerlink" title="Stub中的onTransact方法"></a>Stub中的onTransact方法</h4><p>&ensp;&ensp;然后再看看Stub的onTransact中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException &#123;</span><br><span class="line">    java.lang.String descriptor = DESCRIPTOR;</span><br><span class="line">    switch (code) &#123;</span><br><span class="line">    case INTERFACE_TRANSACTION: &#123;</span><br><span class="line">        reply.writeString(descriptor);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    case TRANSACTION_getBooks: &#123;</span><br><span class="line">        data.enforceInterface(descriptor);</span><br><span class="line">        java.util.List&lt;android.tplink.sjj.aidltest.Book&gt; _result = this.getBooks();</span><br><span class="line">        reply.writeNoException();</span><br><span class="line">        reply.writeTypedList(_result);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    case TRANSACTION_addBook: &#123;</span><br><span class="line">        data.enforceInterface(descriptor);</span><br><span class="line">        android.tplink.sjj.aidltest.Book _arg0;</span><br><span class="line">        if ((0 != data.readInt())) &#123;</span><br><span class="line">            _arg0 = android.tplink.sjj.aidltest.Book.CREATOR.createFromParcel(data);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            _arg0 = null;</span><br><span class="line">        &#125;</span><br><span class="line">        this.addBook(_arg0);</span><br><span class="line">        reply.writeNoException();</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    default: &#123;</span><br><span class="line">        return super.onTransact(code, data, reply, flags);</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，onTransact中的操作和Proxy中的transact是一一对应的，那边发出的请求这边根据binder描述符合接口描述符进行处理，有返回数据时，就写入reply这个数据结构中，依赖底层binder传递给客户端。</p>
+<h3 id="AIDL调用流程"><a href="#AIDL调用流程" class="headerlink" title="AIDL调用流程"></a>AIDL调用流程</h3><p>&ensp;&ensp;根据上面分析，binder跨进程调用通过Proxy实现，Stub和Proxy都实现了我们定义的接口，所有客户端调用都一一对应到服务端，底层的一切包括代理都对客户没有影响，客户端就好像调用本地方法一样。我们传输的参数对象需要序列化，具体可以查一下Parcel接口和原理相关知识。</p>
+
+	  <div class="article-footer-copyright">
+    <a href="https://www.ustc.edu.cn/" target="https://www.ustc.edu.cn/">Copyright reserved by SJJ.</a>
+</div>
+
+	</div>
+
+	
+	<span id="/2019/03/20/AIDL%E5%8E%9F%E7%90%86%E5%92%8C%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90/" class="leancloud-visitors view" data-flag-title="AIDL原理和相关文件解析">
+		<em class="post-meta-item-text"> Page View </em> <i class="leancloud-visitors-count"></i>
+	</span>
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a href="/2021/01/09/Install-K8S-in-centos7/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/2019/03/20/android-app闪退原因总结分析/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+		<section id="comments" class="comments">
+			<style>
+			.comments{margin:30px;padding:10px;background:rgb(0, 0, 0)}
+			@media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#000}}
+			</style>
+			<div id="vcomment" class="comment"></div>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+var valineConfig = {"enable":true,"appId":"xxx","appKey":"xxx","placeholder":"提交评论时留下邮箱收到回复后将自动通知","visitor":true,"avatar":"monsterid","requiredFields":["nick","mail"]}
+valineConfig.el='#vcomment';
+new Valine(valineConfig);
+    // new Valine({
+    //     el: '#vcomment',
+    //     appId: "",
+    //     appKey: "",
+    //     placeholder: "提交评论时留下邮箱收到回复后将自动通知",
+    //     avatar:"monsterid",
+    //     visitor: "true",
+    //     requiredFields: "nick,mail".split(','),
+    // });
+</script>
+
+		</section>
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-03-20 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2021 John Doe's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>
